@@ -284,22 +284,18 @@ begin
    );
 
    MailBox_AddrToRead_inst : MailBox_AddrToRead
-   generic map
-   (
-      WB_Addr_Width => WB_Addr_Width
-   )
    port map
    (
-      wb_clk_i => wb_clk_i,
-      wb_rst_i => wb_rst_i,
-      wb_we_i_Input => wb_we_Sequencer_to_AddrToRead,
-      wb_dat_i_Input => wb_dat_Sequencer_to_AddrToRead,
-      wb_cyc_i_Input => wb_cyc_Sequencer_to_AddrToRead,
-      wb_stb_i_Input => wb_stb_Sequencer_to_AddrToRead,
-      wb_ack_o_Input => wb_ack_AddrToRead_to_Sequencer,
-      AddrRead => AddrRead,
-      AddrToRead => AddrToRead,
-      AddrAvailable => AddrAvailable
+      wb_clk_i    => wb_clk_i,
+      wb_rst_i    => wb_rst_i,
+      wb_we_i     => wb_we_Sequencer_to_AddrToRead,
+      wb_dat_i    => wb_dat_Sequencer_to_AddrToRead,
+      wb_cyc_i    => wb_cyc_Sequencer_to_AddrToRead,
+      wb_stb_i    => wb_stb_Sequencer_to_AddrToRead,
+      wb_ack_o    => wb_ack_AddrToRead_to_Sequencer,
+      Read_i      => AddrRead,
+      Addr_o      => AddrToRead,
+      AddrAvail_o => AddrAvailable
    );
    AddrRead <= wb_ack_DataTable_to_User when AddrAvailable = '1' and wb_we_User_to_DataTable = '0' and wb_adr_User_to_DataTable = AddrToRead else '0';
    wb_atr_o_User <= AddrToRead;

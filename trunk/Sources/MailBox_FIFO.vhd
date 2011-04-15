@@ -1,25 +1,20 @@
------------------------------------------------------------------------------------
---
--- Project Name : MailBox_FIFO
--- Supplier    : Teuchos
---
--- Design Name  : MailBox_FIFO
--- Module Name  : MailBox_FIFO.vhd
---
--- Description  : Universal Asynchronous Receiver Transmitter
+----------------------------------------------------------------------------------
+-- Engineer:      Julien Aupart
 -- 
--- --------------------------------------------------------------------------------
--- Revision List
--- Version     Author(s)      Date      Changes
+-- Module Name:    MailBox_FIFO
 --
--- 1.0        J.Aupart      22/08/10   Creation
------------------------------------------------------------------------------------
+-- Description:      
+--
+-- 
+-- Create Date:    19/07/2009
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
 
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all;
-use ieee.math_real.all;
 
 library MailBox_Lib;
 use MailBox_Lib.MailBox_Pack.all;
@@ -27,92 +22,101 @@ use MailBox_Lib.MailBox_Pack.all;
 entity MailBox_FIFO is
    generic
    (
-      FIFOSize      : integer := 1024;
-      Data_Width     : integer := 8
+      g_FIFOSize  : std_logic_vector := X"3FF"  -- Nombre d'éléments de la FIFO - 1
    );
    port
    (
-      rst       : in std_logic;
-      clk       : in std_logic;
+      rst_i    : in std_logic;
+      clk_i    : in std_logic;
       
-      Write_en   : in std_logic;
-      Data_in    : in std_logic_vector(Data_Width - 1 downto 0);
-      Read_en    : in std_logic;
-      Data_out   : out std_logic_vector(Data_Width - 1 downto 0);
+      WE_i     : in std_logic;
+      Data_i   : in std_logic_vector;
+      RE_i     : in std_logic;
+      Data_o   : out std_logic_vector;
       
-      FIFO_Empty  : out std_logic;
-      FIFO_Full   : out std_logic
+      Empty_o  : out std_logic;
+      Full_o   : out std_logic
    );
 end MailBox_FIFO;
 
 architecture MailBox_FIFO_behavior of MailBox_FIFO is
 
-   type FIFO_type is array (FIFOSize-1 downto 0) of std_logic_vector(Data_Width-1 downto 0);
-   impure function FillRAM return FIFO_type is
-      variable RAM : FIFO_type;
+   type t_FIFO is array (to_integer(unsigned(g_FIFOSize)) downto 0) of std_logic_vector(Data_i'range);
+   
+   impure function FillMEM return t_FIFO is
+      variable RAM : t_FIFO;
    begin
-      for I in FIFO_type'range loop
+      for I in t_FIFO'range loop
          RAM(I) := (others => '0');
       end loop;
       return RAM;
    end function;
-   signal MailBox_FIFO : FIFO_type := FillRAM;
    
-   signal Write_Idx      : std_logic_vector(integer(ceil(log2(real(FIFOSize)))) - 1 downto 0);
-   signal Read_Idx       : std_logic_vector(integer(ceil(log2(real(FIFOSize)))) - 1 downto 0);
-   signal NbrOfElements   : std_logic_vector(integer(ceil(log2(real(FIFOSize)))) - 1 downto 0);
+   signal s_FIFO : t_FIFO := FillMEM;
+   
+   signal s_WriteIdx       : std_logic_vector(g_FIFOSize'range);
+   signal s_ReadIdx        : std_logic_vector(g_FIFOSize'range);
+   signal s_NbrOfElements  : std_logic_vector(g_FIFOSize'range);
    
 begin
 
-   Write_process : process(rst, clk)
+   --
+   -- Assert
+   --
+   assert Data_i'length = Data_o'length   -- On vérifie que les bus de données ont la même taille
+      report "Both data buses shall have the same size"
+      severity failure;
+
+   Write_process : process(rst_i, clk_i)
    begin
-      if rst = '1' then
-         Write_Idx <= (others => '0');
-      elsif rising_edge(clk) then
+      if rst_i = '1' then
+         s_WriteIdx <= (others => '0');
+      elsif rising_edge(clk_i) then
       
-         if Write_en = '1' then
-            MailBox_FIFO(to_integer(unsigned(Write_Idx))) <= Data_in;
-            Write_Idx <= Write_Idx + 1;
+         if WE_i = '1' and s_NbrOfElements /= g_FIFOSize then
+            s_FIFO(to_integer(unsigned(s_WriteIdx))) <= Data_i;
+            s_WriteIdx <= s_WriteIdx + 1;
          end if;
          
       end if;
    end process;
 
-   Read_process : process(rst, clk)
+   Read_process : process(rst_i, clk_i)
    begin
-      if rst = '1' then
-         Read_Idx <= (others => '0');
-      elsif rising_edge(clk) then
+      if rst_i = '1' then
+         s_ReadIdx <= (others => '0');
+      elsif rising_edge(clk_i) then
       
-         Data_out <= MailBox_FIFO(to_integer(unsigned(Read_Idx)));
+         Data_o <= s_FIFO(to_integer(unsigned(s_ReadIdx)));
          
-         if Read_en = '1' then
-            Read_Idx <= Read_Idx + 1;
+         if RE_i = '1' and s_NbrOfElements /= 0 then
+            s_ReadIdx <= s_ReadIdx + 1;
          end if;
          
       end if;
    end process;
    
-   NbrOfElements_process : process(rst, clk)
+   s_NbrOfElements_process : process(rst_i, clk_i)
    begin
-      if rst = '1' then
-         NbrOfElements <= (others => '0');
-      elsif rising_edge(clk) then
+      if rst_i = '1' then
+         s_NbrOfElements <= (others => '0');
+      elsif rising_edge(clk_i) then
       
-         if Write_en = '1' and Read_en = '0' then
-            NbrOfElements <= NbrOfElements + 1;
-         elsif Write_en = '0' and Read_en = '1' then
-            NbrOfElements <= NbrOfElements - 1;
+         if WE_i = '1' and RE_i = '0' and s_NbrOfElements /= g_FIFOSize then
+            s_NbrOfElements <= s_NbrOfElements + 1;
+         elsif WE_i = '0' and RE_i = '1' and s_NbrOfElements /= 0 then
+            s_NbrOfElements <= s_NbrOfElements - 1;
          else
-            NbrOfElements <= NbrOfElements;
+            s_NbrOfElements <= s_NbrOfElements;
          end if;
          
       end if;
    end process;
    
-   FIFO_Empty <= '1' when NbrOfElements = 0 else
+   Empty_o <= '1' when s_NbrOfElements = 0 else
               '0';
-   FIFO_Full <= '1' when signed(NbrOfElements) = -1 else
+              
+   Full_o <= '1' when s_NbrOfElements = g_FIFOSize else
              '0';
 
 end MailBox_FIFO_behavior;

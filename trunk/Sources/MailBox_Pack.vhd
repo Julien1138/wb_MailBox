@@ -39,15 +39,15 @@ package MailBox_Pack is
          wb_rst_i      : in std_logic;
          
       -- Settings and Data Read Interface
-         wb_we_i_Slave   : in std_logic;
-         wb_adr_i_Slave  : in std_logic_vector(WB_Addr_Width + 2 downto 0);
-         wb_dat_i_Slave  : in std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_dat_o_Slave  : out std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_cyc_i_Slave  : in std_logic;
-         wb_stb_i_Slave  : in std_logic;
-         wb_ack_o_Slave  : out std_logic;
-         wb_dtr_o_Slave  : out std_logic;   -- Data is available to be read
-         wb_atr_o_Slave  : out std_logic_vector(WB_Addr_Width downto 0); -- Address at which Data should be read
+         wb_we_i_User   : in std_logic;
+         wb_adr_i_User  : in std_logic_vector(WB_Addr_Width + 2 downto 0);
+         wb_dat_i_User  : in std_logic_vector(WB_Data_Width - 1 downto 0);
+         wb_dat_o_User  : out std_logic_vector(WB_Data_Width - 1 downto 0);
+         wb_cyc_i_User  : in std_logic;
+         wb_stb_i_User  : in std_logic;
+         wb_ack_o_User  : out std_logic;
+         wb_dtr_o_User  : out std_logic;   -- Data is available to be read
+         wb_atr_o_User  : out std_logic_vector(WB_Addr_Width downto 0); -- Address at which Data should be read
          
       -- External Master Interface
          wb_we_o_Master  : out std_logic;
@@ -58,7 +58,7 @@ package MailBox_Pack is
          wb_stb_o_Master : out std_logic;
          wb_ack_i_Master : in std_logic;
       
-         RTC_time      : out std_logic_vector(RTC_time_Width - 1 downto 0)
+         RTCTime_o      : out std_logic_vector(RTC_time_Width - 1 downto 0)
       );
    end component;
 
@@ -198,26 +198,22 @@ package MailBox_Pack is
    end component;
    
    component MailBox_AddrToRead
-      generic
-      (
-         WB_Addr_Width   : integer
-      );
       port
       (
-         wb_clk_i      : in std_logic;
-         wb_rst_i      : in std_logic;
+         wb_clk_i    : in std_logic;
+         wb_rst_i    : in std_logic;
          
       -- Input Interface
-         wb_we_i_Input   : in std_logic;
-         wb_dat_i_Input  : in std_logic_vector(WB_Addr_Width downto 0);
-         wb_cyc_i_Input  : in std_logic;
-         wb_stb_i_Input  : in std_logic;
-         wb_ack_o_Input  : out std_logic;
+         wb_we_i     : in std_logic;
+         wb_dat_i    : in std_logic_vector;
+         wb_cyc_i    : in std_logic;
+         wb_stb_i    : in std_logic;
+         wb_ack_o    : out std_logic;
          
       -- Output Interface
-         AddrRead      : in std_logic; -- Current address is being read
-         AddrToRead     : out std_logic_vector(WB_Addr_Width downto 0);
-         AddrAvailable   : out std_logic -- Address Available to be read
+         Read_i      : in std_logic; -- Current address is being read
+         Addr_o      : out std_logic_vector;
+         AddrAvail_o : out std_logic -- Address Available to be read
       );
    end component;
    
@@ -250,21 +246,20 @@ package MailBox_Pack is
    component MailBox_FIFO
       generic
       (
-         FIFOSize      : integer;
-         Data_Width     : integer
+         g_FIFOSize  : std_logic_vector := X"3FF"  -- Nombre d'éléments de la FIFO - 1
       );
       port
       (
-         rst       : in std_logic;
-         clk       : in std_logic;
+         rst_i    : in std_logic;
+         clk_i    : in std_logic;
          
-         Write_en   : in std_logic;
-         Data_in    : in std_logic_vector(Data_Width - 1 downto 0);
-         Read_en    : in std_logic;
-         Data_out   : out std_logic_vector(Data_Width - 1 downto 0);
+         WE_i     : in std_logic;
+         Data_i   : in std_logic_vector;
+         RE_i     : in std_logic;
+         Data_o   : out std_logic_vector;
          
-         FIFO_Empty  : out std_logic;
-         FIFO_Full   : out std_logic
+         Empty_o  : out std_logic;
+         Full_o   : out std_logic
       );
    end component;
 
