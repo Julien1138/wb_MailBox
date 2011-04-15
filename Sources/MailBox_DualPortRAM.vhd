@@ -14,7 +14,6 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.std_logic_unsigned.all;
-use ieee.math_real.all;
 
 library MailBox_Lib;
 use MailBox_Lib.MailBox_Pack.all;
@@ -47,16 +46,18 @@ end MailBox_DualPortRAM;
 
 architecture MailBox_DualPortRAM_behavior of MailBox_DualPortRAM is
    
-   type ram_type is array ((2**wb_adr_A_i'length) - 1 downto 0) of std_logic_vector(wb_dat_A_i'range);
-   impure function FillRAM return ram_type is
-      variable RAM : ram_type;
+   type t_RAM is array ((2**wb_adr_A_i'length) - 1 downto 0) of std_logic_vector(wb_dat_A_i'range);
+   
+   impure function FillRAM return t_RAM is
+      variable RAM : t_RAM;
    begin
-      for I in ram_type'range loop
+      for I in t_RAM'range loop
          RAM(I) := (others => '0');
       end loop;
       return RAM;
    end function;
-   shared variable Table : ram_type := FillRAM;
+   
+   shared variable v_Table : t_RAM := FillRAM;
    
    signal s_wb_ack_A : std_logic;
    signal s_wb_ack_B : std_logic;
@@ -82,9 +83,9 @@ begin
       if rising_edge(wb_clk_i) then
          if wb_cyc_A_i = '1' and wb_stb_A_i = '1' then
             if wb_we_A_i = '1' then
-               Table(to_integer(unsigned(wb_adr_A_i))) := wb_dat_A_i;
+               v_Table(to_integer(unsigned(wb_adr_A_i))) := wb_dat_A_i;
             else
-               wb_dat_A_o <= Table(to_integer(unsigned(wb_adr_A_i)));
+               wb_dat_A_o <= v_Table(to_integer(unsigned(wb_adr_A_i)));
             end if;
          end if;
       end if;
@@ -111,9 +112,9 @@ begin
       if rising_edge(wb_clk_i) then
          if wb_cyc_B_i = '1' and wb_stb_B_i = '1' then
             if wb_we_B_i = '1' then
-               Table(to_integer(unsigned(wb_adr_B_i))) := wb_dat_B_i;
+               v_Table(to_integer(unsigned(wb_adr_B_i))) := wb_dat_B_i;
             else
-               wb_dat_B_o <= Table(to_integer(unsigned(wb_adr_B_i)));
+               wb_dat_B_o <= v_Table(to_integer(unsigned(wb_adr_B_i)));
             end if;
          end if;
       end if;
