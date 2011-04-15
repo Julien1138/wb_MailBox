@@ -19,7 +19,7 @@ use ieee.math_real.all;
 entity MailBox_RTC is
    generic
    (
-      g_RTCClockPeriode : std_logic_vector := X"C350" -- Durée d'une période de l'horloge de datation
+      g_RTCClockPeriode : std_logic_vector := X"C349" -- Durée d'une période de l'horloge de datation - 1
    );
    port
    (
@@ -35,14 +35,7 @@ architecture MailBox_RTC_behavior of MailBox_RTC is
    signal s_RtcTimeCount      : std_logic_vector(RTC_time_o'range);
    
 begin
-   
-   --
-   -- Assert
-   --
-   assert g_RTCClockPeriode'length = RTC_time_o'length  -- on vérifie que les 2 vecteurs ont bien la même taille
-      report "g_RTCClockPeriode and RTC_time_o shall have the same size"
-      severity failure;
-   
+
    --
    --! ClkPeriodeCounter_process
    --
@@ -51,11 +44,13 @@ begin
       if rst_i = '1' then
          s_ClkPeriodeCounter <= g_RTCClockPeriode;
       elsif rising_edge(clk_i) then
+      
          if s_ClkPeriodeCounter = 0 then
             s_ClkPeriodeCounter <= g_RTCClockPeriode;
          else
             s_ClkPeriodeCounter <= s_ClkPeriodeCounter - 1;
          end if;
+         
       end if;
    end process;
    
@@ -67,9 +62,11 @@ begin
       if rst_i = '1' then
          s_RtcTimeCount <= (others => '0');
       elsif rising_edge(clk_i) then
+      
          if s_ClkPeriodeCounter = 0 then
             s_RtcTimeCount <= s_RtcTimeCount + 1;
          end if;
+         
       end if;
    end process;
    RTC_time_o <= s_RtcTimeCount;

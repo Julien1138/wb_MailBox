@@ -28,7 +28,7 @@ package MailBox_Pack is
    component MailBox
       generic
       (
-         g_RTCClockPeriode : std_logic_vector;  -- Durée d'une période de l'horloge de datation
+         g_RTCClockPeriode : std_logic_vector;  -- Durée d'une période de l'horloge de datation - 1
          WB_Addr_Width         : integer;
          WB_Data_Width         : integer;
          RTC_time_Width        : integer
@@ -197,7 +197,7 @@ package MailBox_Pack is
    component MailBox_RTC
       generic
       (
-         g_RTCClockPeriode : std_logic_vector   -- Durée d'une période de l'horloge de datation
+         g_RTCClockPeriode : std_logic_vector   -- Durée d'une période de l'horloge de datation - 1
       );
       port
       (
