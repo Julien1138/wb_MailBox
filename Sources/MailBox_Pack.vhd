@@ -132,65 +132,55 @@ package MailBox_Pack is
    end component;
    
    component MailBox_Recurrence
-      generic
-      (
-         WB_Addr_Width   : integer;
-         WB_Data_Width   : integer
-      );
       port
       (
-         wb_clk_i      : in std_logic;
-         wb_rst_i      : in std_logic;
+         wb_clk_i       : in std_logic;
+         wb_rst_i       : in std_logic;
          
       -- Interface A
-         wb_we_i_A   : in std_logic;
-         wb_adr_i_A  : in std_logic_vector(WB_Addr_Width - 1 downto 0);
-         wb_dat_i_A  : in std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_dat_o_A  : out std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_cyc_i_A  : in std_logic;
-         wb_stb_i_A  : in std_logic;
-         wb_ack_o_A  : out std_logic;
+         wb_we_usr_i    : in std_logic;
+         wb_adr_usr_i   : in std_logic_vector;
+         wb_dat_usr_i   : in std_logic_vector;
+         wb_dat_usr_o   : out std_logic_vector;
+         wb_cyc_usr_i   : in std_logic;
+         wb_stb_usr_i   : in std_logic;
+         wb_ack_usr_o   : out std_logic;
          
       -- Interface B
-         wb_adr_i_B  : in std_logic_vector(WB_Addr_Width - 1 downto 0);
-         wb_dat_o_B  : out std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_cyc_i_B  : in std_logic;
-         wb_stb_i_B  : in std_logic;
-         wb_ack_o_B  : out std_logic;
-         wb_vld_o_B  : out std_logic    -- Indique si la valeur lue est valide
+         wb_adr_seq_i   : in std_logic_vector;
+         wb_dat_seq_o   : out std_logic_vector;
+         wb_cyc_seq_i   : in std_logic;
+         wb_stb_seq_i   : in std_logic;
+         wb_ack_seq_o   : out std_logic;
+         wb_vld_seq_o   : out std_logic   -- Indique si la valeur lue est valide
       );
    end component;
    
    component MailBox_Timetable
-      generic
-      (
-         WB_Addr_Width   : integer;
-         WB_Data_Width   : integer
-      );
       port
       (
-         wb_clk_i      : in std_logic;
-         wb_rst_i      : in std_logic;
+         wb_clk_i       : in std_logic;
+         wb_rst_i       : in std_logic;
          
       -- Interface A
-         wb_we_i_A   : in std_logic;
-         wb_adr_i_A  : in std_logic_vector(WB_Addr_Width - 1 downto 0);
-         wb_dat_i_A  : in std_logic_vector(WB_Data_Width - 1 downto 0) := (others => '0');
-         wb_dat_o_A  : out std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_cyc_i_A  : in std_logic;
-         wb_stb_i_A  : in std_logic;
-         wb_ack_o_A  : out std_logic;
+         wb_we_usr_i    : in std_logic;
+         wb_adr_usr_i   : in std_logic_vector;
+         wb_dat_usr_i   : in std_logic_vector;
+         wb_dat_usr_o   : out std_logic_vector;
+         wb_cyc_usr_i   : in std_logic;
+         wb_stb_usr_i   : in std_logic;
+         wb_ack_usr_o   : out std_logic;
          
       -- Interface B
-         wb_we_i_B   : in std_logic;
-         wb_adr_i_B  : in std_logic_vector(WB_Addr_Width - 1 downto 0);
-         wb_dat_i_B  : in std_logic_vector(WB_Data_Width - 1 downto 0) := (others => '0');
-         wb_dat_o_B  : out std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_cyc_i_B  : in std_logic;
-         wb_stb_i_B  : in std_logic;
-         wb_ack_o_B  : out std_logic;
-         wb_vld_i_B  : in std_logic;
-         wb_vld_o_B  : out std_logic
+         wb_we_seq_i    : in std_logic;
+         wb_adr_seq_i   : in std_logic_vector;
+         wb_dat_seq_i   : in std_logic_vector;
+         wb_dat_seq_o   : out std_logic_vector;
+         wb_cyc_seq_i   : in std_logic;
+         wb_stb_seq_i   : in std_logic;
+         wb_ack_seq_o   : out std_logic;
+         wb_vld_seq_i   : in std_logic;   -- Indique que la valeur n'est plus valide
+         wb_vld_seq_o   : out std_logic   -- Indique si la valeur lue est valide
       );
    end component;
    
@@ -232,33 +222,28 @@ package MailBox_Pack is
    end component;
    
    component MailBox_DualPortRAM
-      generic
-      (
-         WB_Addr_Width   : integer;
-         WB_Data_Width   : integer
-      );
       port
       (
-         wb_clk_i      : in std_logic;
-         wb_rst_i      : in std_logic;
+         wb_clk_i    : in std_logic;
+         wb_rst_i    : in std_logic;
          
       -- Interface A
-         wb_we_i_A   : in std_logic := '0';
-         wb_adr_i_A  : in std_logic_vector(WB_Addr_Width - 1 downto 0);
-         wb_dat_i_A  : in std_logic_vector(WB_Data_Width - 1 downto 0) := (others => '0');
-         wb_dat_o_A  : out std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_cyc_i_A  : in std_logic;
-         wb_stb_i_A  : in std_logic;
-         wb_ack_o_A  : out std_logic;
+         wb_we_A_i   : in std_logic;
+         wb_adr_A_i  : in std_logic_vector;
+         wb_dat_A_i  : in std_logic_vector;
+         wb_dat_A_o  : out std_logic_vector;
+         wb_cyc_A_i  : in std_logic;
+         wb_stb_A_i  : in std_logic;
+         wb_ack_A_o  : out std_logic;
          
       -- Interface B
-         wb_we_i_B  : in std_logic := '0';
-         wb_adr_i_B : in std_logic_vector(WB_Addr_Width - 1 downto 0);
-         wb_dat_i_B : in std_logic_vector(WB_Data_Width - 1 downto 0) := (others => '0');
-         wb_dat_o_B : out std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_cyc_i_B : in std_logic;
-         wb_stb_i_B : in std_logic;
-         wb_ack_o_B : out std_logic
+         wb_we_B_i  : in std_logic;
+         wb_adr_B_i : in std_logic_vector;
+         wb_dat_B_i : in std_logic_vector;
+         wb_dat_B_o : out std_logic_vector;
+         wb_cyc_B_i : in std_logic;
+         wb_stb_B_i : in std_logic;
+         wb_ack_B_o : out std_logic
       );
    end component;
    

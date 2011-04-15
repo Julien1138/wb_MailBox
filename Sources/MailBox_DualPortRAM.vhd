@@ -20,39 +20,34 @@ library MailBox_Lib;
 use MailBox_Lib.MailBox_Pack.all;
 
 entity MailBox_DualPortRAM is
-   generic
-   (
-      WB_Addr_Width   : integer := 4;
-      WB_Data_Width   : integer := 32
-   );
    port
    (
-      wb_clk_i      : in std_logic;
-      wb_rst_i      : in std_logic;
+      wb_clk_i    : in std_logic;
+      wb_rst_i    : in std_logic;
       
    -- Interface A
-      wb_we_i_A   : in std_logic := '0';
-      wb_adr_i_A  : in std_logic_vector(WB_Addr_Width - 1 downto 0);
-      wb_dat_i_A  : in std_logic_vector(WB_Data_Width - 1 downto 0) := (others => '0');
-      wb_dat_o_A  : out std_logic_vector(WB_Data_Width - 1 downto 0);
-      wb_cyc_i_A  : in std_logic;
-      wb_stb_i_A  : in std_logic;
-      wb_ack_o_A  : out std_logic;
+      wb_we_A_i   : in std_logic;
+      wb_adr_A_i  : in std_logic_vector;
+      wb_dat_A_i  : in std_logic_vector;
+      wb_dat_A_o  : out std_logic_vector;
+      wb_cyc_A_i  : in std_logic;
+      wb_stb_A_i  : in std_logic;
+      wb_ack_A_o  : out std_logic;
       
    -- Interface B
-      wb_we_i_B  : in std_logic := '0';
-      wb_adr_i_B : in std_logic_vector(WB_Addr_Width - 1 downto 0);
-      wb_dat_i_B : in std_logic_vector(WB_Data_Width - 1 downto 0) := (others => '0');
-      wb_dat_o_B : out std_logic_vector(WB_Data_Width - 1 downto 0);
-      wb_cyc_i_B : in std_logic;
-      wb_stb_i_B : in std_logic;
-      wb_ack_o_B : out std_logic
+      wb_we_B_i  : in std_logic;
+      wb_adr_B_i : in std_logic_vector;
+      wb_dat_B_i : in std_logic_vector;
+      wb_dat_B_o : out std_logic_vector;
+      wb_cyc_B_i : in std_logic;
+      wb_stb_B_i : in std_logic;
+      wb_ack_B_o : out std_logic
    );
 end MailBox_DualPortRAM;
 
 architecture MailBox_DualPortRAM_behavior of MailBox_DualPortRAM is
    
-   type ram_type is array ((2**WB_Addr_Width) - 1 downto 0) of std_logic_vector (WB_Data_Width - 1 downto 0);
+   type ram_type is array ((2**wb_adr_A_i'length) - 1 downto 0) of std_logic_vector(wb_dat_A_i'range);
    impure function FillRAM return ram_type is
       variable RAM : ram_type;
    begin
@@ -63,67 +58,80 @@ architecture MailBox_DualPortRAM_behavior of MailBox_DualPortRAM is
    end function;
    shared variable Table : ram_type := FillRAM;
    
-   signal wb_ack_o_A_int  : std_logic;
-   signal wb_ack_o_B_int : std_logic;
+   signal s_wb_ack_A : std_logic;
+   signal s_wb_ack_B : std_logic;
    
 begin
-
+   
+   --
+   -- Assert
+   --
+   assert wb_adr_A_i'length = wb_adr_B_i'length -- On vérifie que les bus d'adresse ont la même taille
+      report "Both address buses shall have the same size"
+      severity failure;
+      
+   assert wb_dat_A_i'length = wb_dat_A_o'length
+      and wb_dat_A_i'length = wb_dat_B_i'length
+      and wb_dat_A_o'length = wb_dat_B_o'length -- On vérifie que les bus de donnée ont la même taille
+      report "the four data buses shall have the same size"
+      severity failure;
+   
    -- Gestion de l'interface A
    A_Interface_Data_process : process (wb_clk_i)
    begin
       if rising_edge(wb_clk_i) then
-         if wb_cyc_i_A = '1' and wb_stb_i_A = '1' then
-            if wb_we_i_A = '1' then
-               Table(to_integer(unsigned(wb_adr_i_A))) := wb_dat_i_A;
+         if wb_cyc_A_i = '1' and wb_stb_A_i = '1' then
+            if wb_we_A_i = '1' then
+               Table(to_integer(unsigned(wb_adr_A_i))) := wb_dat_A_i;
             else
-               wb_dat_o_A <= Table(to_integer(unsigned(wb_adr_i_A)));
+               wb_dat_A_o <= Table(to_integer(unsigned(wb_adr_A_i)));
             end if;
          end if;
       end if;
    end process;
    
-   A_Interface_Ack_process : process(wb_clk_i)
+   A_Interface_Ack_process : process(wb_rst_i, wb_clk_i)
    begin
-      if rising_edge(wb_clk_i) then
-         if wb_rst_i = '1' then
-            wb_ack_o_A_int <= '0';
-         else
-            wb_ack_o_A_int <= '0';
-            if wb_cyc_i_A = '1' and wb_stb_i_A = '1' and wb_ack_o_A_int = '0' then
-               wb_ack_o_A_int <= '1';
-            end if;
+      if wb_rst_i = '1' then
+         s_wb_ack_A <= '0';
+      elsif rising_edge(wb_clk_i) then
+         s_wb_ack_A <= '0';
+         
+         if wb_cyc_A_i = '1' and wb_stb_A_i = '1' and s_wb_ack_A = '0' then
+            s_wb_ack_A <= '1';
          end if;
+         
       end if;
    end process;
-   wb_ack_o_A <= wb_ack_o_A_int;
+   wb_ack_A_o <= s_wb_ack_A;
 
    -- Gestion de l'interface B
    B_Interface_Data_process : process (wb_clk_i)
    begin
       if rising_edge(wb_clk_i) then
-         if wb_cyc_i_B = '1' and wb_stb_i_B = '1' then
-            if wb_we_i_B = '1' then
-               Table(to_integer(unsigned(wb_adr_i_B))) := wb_dat_i_B;
+         if wb_cyc_B_i = '1' and wb_stb_B_i = '1' then
+            if wb_we_B_i = '1' then
+               Table(to_integer(unsigned(wb_adr_B_i))) := wb_dat_B_i;
             else
-               wb_dat_o_B <= Table(to_integer(unsigned(wb_adr_i_B)));
+               wb_dat_B_o <= Table(to_integer(unsigned(wb_adr_B_i)));
             end if;
          end if;
       end if;
    end process;
    
-   B_Interface_Ack_process : process(wb_clk_i)
+   B_Interface_Ack_process : process(wb_rst_i, wb_clk_i)
    begin
-      if rising_edge(wb_clk_i) then
-         if wb_rst_i = '1' then
-            wb_ack_o_B_int <= '0';
-         else
-            wb_ack_o_B_int <= '0';
-            if wb_cyc_i_B = '1' and wb_stb_i_B = '1' and wb_ack_o_B_int = '0' then
-               wb_ack_o_B_int <= '1';
-            end if;
+      if wb_rst_i = '1' then
+         s_wb_ack_B <= '0';
+      elsif rising_edge(wb_clk_i) then
+         s_wb_ack_B <= '0';
+         
+         if wb_cyc_B_i = '1' and wb_stb_B_i = '1' and s_wb_ack_B = '0' then
+            s_wb_ack_B <= '1';
          end if;
+         
       end if;
    end process;
-   wb_ack_o_B <= wb_ack_o_B_int;
+   wb_ack_B_o <= s_wb_ack_B;
 
 end MailBox_DualPortRAM_behavior;
