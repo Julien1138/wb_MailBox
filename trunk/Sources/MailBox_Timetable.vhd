@@ -24,7 +24,7 @@ entity MailBox_Timetable is
       wb_clk_i       : in std_logic;
       wb_rst_i       : in std_logic;
       
-   -- Interface A
+   -- Interface User
       wb_we_usr_i    : in std_logic;
       wb_adr_usr_i   : in std_logic_vector;
       wb_dat_usr_i   : in std_logic_vector;
@@ -33,7 +33,7 @@ entity MailBox_Timetable is
       wb_stb_usr_i   : in std_logic;
       wb_ack_usr_o   : out std_logic;
       
-   -- Interface B
+   -- Interface Sequencer
       wb_we_seq_i    : in std_logic;
       wb_adr_seq_i   : in std_logic_vector;
       wb_dat_seq_i   : in std_logic_vector;
