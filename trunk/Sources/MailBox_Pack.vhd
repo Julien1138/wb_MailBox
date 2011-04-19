@@ -63,71 +63,68 @@ package MailBox_Pack is
    end component;
 
    component MailBox_Sequencer
-      generic
-      (
-         WB_Addr_Width   : integer;
-         WB_Data_Width   : integer;
-         RTC_time_Width  : integer
-      );
       port
       (
-         wb_clk_i            : in std_logic;
-         wb_rst_i            : in std_logic;
+         wb_clk_i             : in std_logic;
+         wb_rst_i             : in std_logic;
          
-      -- Interface Recurrence Table
-         wb_adr_o_Recurrence    : out std_logic_vector(WB_Addr_Width downto 0);
-         wb_dat_i_Recurrence    : in std_logic_vector(RTC_time_Width - 1 downto 0);
-         wb_cyc_o_Recurrence    : out std_logic;
-         wb_stb_o_Recurrence    : out std_logic;
-         wb_ack_i_Recurrence    : in std_logic;
-         wb_vld_i_Recurrence    : in std_logic;
+      -- Timetable Interface
+         wb_we_Timetable_o    : out std_logic;
+         wb_adr_Timetable_o   : out std_logic_vector;
+         wb_dat_Timetable_o   : out std_logic_vector;
+         wb_dat_Timetable_i   : in std_logic_vector;
+         wb_cyc_Timetable_o   : out std_logic;
+         wb_stb_Timetable_o   : out std_logic;
+         wb_ack_Timetable_i   : in std_logic;
+         wb_vld_Timetable_o   : out std_logic;
+         wb_vld_Timetable_i   : in std_logic;
          
-      -- Interface Timetable
-         wb_we_o_Timetable      : out std_logic;
-         wb_adr_o_Timetable     : out std_logic_vector(WB_Addr_Width downto 0);
-         wb_dat_o_Timetable     : out std_logic_vector(RTC_time_Width - 1 downto 0);
-         wb_dat_i_Timetable     : in std_logic_vector(RTC_time_Width - 1 downto 0);
-         wb_cyc_o_Timetable     : out std_logic;
-         wb_stb_o_Timetable     : out std_logic;
-         wb_ack_i_Timetable     : in std_logic;
-         wb_vld_o_Timetable     : out std_logic;
-         wb_vld_i_Timetable     : in std_logic;
+      -- Recurrence Table Interface
+         wb_adr_Recurrence_o  : out std_logic_vector;
+         wb_dat_Recurrence_i  : in std_logic_vector;
+         wb_cyc_Recurrence_o  : out std_logic;
+         wb_stb_Recurrence_o  : out std_logic;
+         wb_ack_Recurrence_i  : in std_logic;
+         wb_vld_Recurrence_i  : in std_logic;
          
       -- Interface DatingTable
-         wb_we_o_DatingTable    : out std_logic;
-         wb_adr_o_DatingTable   : out std_logic_vector(WB_Addr_Width downto 0);
-         wb_dat_o_DatingTable   : out std_logic_vector(RTC_time_Width - 1 downto 0);
-         wb_cyc_o_DatingTable   : out std_logic;
-         wb_stb_o_DatingTable   : out std_logic;
-         wb_ack_i_DatingTable   : in std_logic;
+         wb_we_DatingTable_o  : out std_logic;
+         wb_adr_DatingTable_o : out std_logic_vector;
+         wb_dat_DatingTable_o : out std_logic_vector;
+         wb_cyc_DatingTable_o : out std_logic;
+         wb_stb_DatingTable_o : out std_logic;
+         wb_ack_DatingTable_i : in std_logic;
          
       -- Interface DataTable
-         wb_we_o_DataTable      : out std_logic;
-         wb_adr_o_DataTable     : out std_logic_vector(WB_Addr_Width downto 0);
-         wb_dat_o_DataTable     : out std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_dat_i_DataTable     : in std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_cyc_o_DataTable     : out std_logic;
-         wb_stb_o_DataTable     : out std_logic;
-         wb_ack_i_DataTable     : in std_logic;
+         wb_we_DataTable_o    : out std_logic;
+         wb_adr_DataTable_o   : out std_logic_vector;
+         wb_dat_DataTable_o   : out std_logic_vector;
+         wb_dat_DataTable_i   : in std_logic_vector;
+         wb_cyc_DataTable_o   : out std_logic;
+         wb_stb_DataTable_o   : out std_logic;
+         wb_ack_DataTable_i   : in std_logic;
          
       -- Interface AddrToRead
-         wb_we_o_AddrToRead     : out std_logic;
-         wb_dat_o_AddrToRead    : out std_logic_vector(WB_Addr_Width downto 0);
-         wb_cyc_o_AddrToRead    : out std_logic;
-         wb_stb_o_AddrToRead    : out std_logic;
-         wb_ack_i_AddrToRead    : in std_logic;
+         wb_we_AddrToRead_o   : out std_logic;
+         wb_dat_AddrToRead_o  : out std_logic_vector;
+         wb_cyc_AddrToRead_o  : out std_logic;
+         wb_stb_AddrToRead_o  : out std_logic;
+         wb_ack_AddrToRead_i  : in std_logic;
          
       -- Interface Master Exterieur
-         wb_we_o_Master        : out std_logic;
-         wb_adr_o_Master       : out std_logic_vector(WB_Addr_Width - 1 downto 0);
-         wb_dat_o_Master       : out std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_dat_i_Master       : in std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_cyc_o_Master       : out std_logic;
-         wb_stb_o_Master       : out std_logic;
-         wb_ack_i_Master       : in std_logic;
+         wb_we_Master_o       : out std_logic;
+         wb_adr_Master_o      : out std_logic_vector;
+         wb_dat_Master_o      : out std_logic_vector;
+         wb_dat_Master_i      : in std_logic_vector;
+         wb_cyc_Master_o      : out std_logic;
+         wb_stb_Master_o      : out std_logic;
+         wb_ack_Master_i      : in std_logic;
          
       -- RTC interface
-         RTC_time            : in std_logic_vector(RTC_time_Width - 1 downto 0)
+         RTCTime_i            : in std_logic_vector;
+         
+      -- Ext Interface
+         Trigger_i            : in std_logic_vector
       );
    end component;
    

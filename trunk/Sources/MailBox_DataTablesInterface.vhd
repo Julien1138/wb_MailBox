@@ -81,29 +81,27 @@ begin
    -- Dating Table Interface
    DatingTable_Interface_process : process(wb_clk_i)
    begin
-      if rising_edge(wb_clk_i) then
-         if wb_rst_i = '1' then
-            wb_we_DatingTable_o <= '0';
-            wb_cyc_DatingTable_o <= '0';
-            wb_stb_DatingTable_o <= '0';
-            wb_dat_DatingTable_o <= (wb_dat_DatingTable_o'range => '0');
-         else
-            if s_WriteDatingTable = '1' then
-               if wb_ack_DatingTable_i = '0' then
-                  wb_we_DatingTable_o <= '1';
-                  wb_cyc_DatingTable_o <= '1';
-                  wb_stb_DatingTable_o <= '1';
-                  wb_dat_DatingTable_o <= RTCTime_i;
-               else
-                  wb_we_DatingTable_o <= '0';
-                  wb_cyc_DatingTable_o <= '0';
-                  wb_stb_DatingTable_o <= '0';
-               end if;
+      if wb_rst_i = '1' then
+         wb_we_DatingTable_o <= '0';
+         wb_cyc_DatingTable_o <= '0';
+         wb_stb_DatingTable_o <= '0';
+         wb_dat_DatingTable_o <= (wb_dat_DatingTable_o'range => '0');
+      elsif rising_edge(wb_clk_i) then
+         if s_WriteDatingTable = '1' then
+            if wb_ack_DatingTable_i = '0' then
+               wb_we_DatingTable_o <= '1';
+               wb_cyc_DatingTable_o <= '1';
+               wb_stb_DatingTable_o <= '1';
+               wb_dat_DatingTable_o <= RTCTime_i;
             else
                wb_we_DatingTable_o <= '0';
                wb_cyc_DatingTable_o <= '0';
                wb_stb_DatingTable_o <= '0';
             end if;
+         else
+            wb_we_DatingTable_o <= '0';
+            wb_cyc_DatingTable_o <= '0';
+            wb_stb_DatingTable_o <= '0';
          end if;
       end if;
    end process;
@@ -112,39 +110,37 @@ begin
    -- Data Table Interface
    DataTable_Interface_process : process(wb_clk_i)
    begin
-      if rising_edge(wb_clk_i) then
-         if wb_rst_i = '1' then
-            wb_we_DataTable_o <= '0';
-            wb_cyc_DataTable_o <= '0';
-            wb_stb_DataTable_o <= '0';
-            wb_dat_Master_o <= (wb_dat_Master_o'range => '0');
-         else
-            if s_ReadDataTable = '1' then
-               if wb_ack_DataTable_i = '0' then
-                  wb_we_DataTable_o <= '0';
-                  wb_cyc_DataTable_o <= '1';
-                  wb_stb_DataTable_o <= '1';
-               else
-                  wb_we_DataTable_o <= '0';
-                  wb_cyc_DataTable_o <= '0';
-                  wb_stb_DataTable_o <= '0';
-                  wb_dat_Master_o <= wb_dat_DataTable_i;
-               end if;
-            elsif s_WriteDataTable = '1' then
-               if wb_ack_DataTable_i = '0' then
-                  wb_we_DataTable_o <= '1';
-                  wb_cyc_DataTable_o <= '1';
-                  wb_stb_DataTable_o <= '1';
-               else
-                  wb_we_DataTable_o <= '0';
-                  wb_cyc_DataTable_o <= '0';
-                  wb_stb_DataTable_o <= '0';
-               end if;
+      if wb_rst_i = '1' then
+         wb_we_DataTable_o <= '0';
+         wb_cyc_DataTable_o <= '0';
+         wb_stb_DataTable_o <= '0';
+         wb_dat_Master_o <= (wb_dat_Master_o'range => '0');
+      elsif rising_edge(wb_clk_i) then
+         if s_ReadDataTable = '1' then
+            if wb_ack_DataTable_i = '0' then
+               wb_we_DataTable_o <= '0';
+               wb_cyc_DataTable_o <= '1';
+               wb_stb_DataTable_o <= '1';
+            else
+               wb_we_DataTable_o <= '0';
+               wb_cyc_DataTable_o <= '0';
+               wb_stb_DataTable_o <= '0';
+               wb_dat_Master_o <= wb_dat_DataTable_i;
+            end if;
+         elsif s_WriteDataTable = '1' then
+            if wb_ack_DataTable_i = '0' then
+               wb_we_DataTable_o <= '1';
+               wb_cyc_DataTable_o <= '1';
+               wb_stb_DataTable_o <= '1';
             else
                wb_we_DataTable_o <= '0';
                wb_cyc_DataTable_o <= '0';
                wb_stb_DataTable_o <= '0';
             end if;
+         else
+            wb_we_DataTable_o <= '0';
+            wb_cyc_DataTable_o <= '0';
+            wb_stb_DataTable_o <= '0';
          end if;
       end if;
    end process;
@@ -153,29 +149,27 @@ begin
    -- AddrToRead Interface
    AddrToRead_Interface_process : process(wb_clk_i)
    begin
-      if rising_edge(wb_clk_i) then
-         if wb_rst_i = '1' then
-            wb_we_AddrToRead_o <= '0';
-            wb_cyc_AddrToRead_o <= '0';
-            wb_stb_AddrToRead_o <= '0';
-            wb_dat_AddrToRead_o <= (wb_dat_AddrToRead_o'range => '0');
-         else
-            if s_WriteAddrToRead = '1' then
-               if wb_ack_AddrToRead_i = '0' then
-                  wb_we_AddrToRead_o <= '1';
-                  wb_cyc_AddrToRead_o <= '1';
-                  wb_stb_AddrToRead_o <= '1';
-                  wb_dat_AddrToRead_o <= EventAddr_i;
-               else
-                  wb_we_AddrToRead_o <= '0';
-                  wb_cyc_AddrToRead_o <= '0';
-                  wb_stb_AddrToRead_o <= '0';
-               end if;
+      if wb_rst_i = '1' then
+         wb_we_AddrToRead_o <= '0';
+         wb_cyc_AddrToRead_o <= '0';
+         wb_stb_AddrToRead_o <= '0';
+         wb_dat_AddrToRead_o <= (wb_dat_AddrToRead_o'range => '0');
+      elsif rising_edge(wb_clk_i) then
+         if s_WriteAddrToRead = '1' then
+            if wb_ack_AddrToRead_i = '0' then
+               wb_we_AddrToRead_o <= '1';
+               wb_cyc_AddrToRead_o <= '1';
+               wb_stb_AddrToRead_o <= '1';
+               wb_dat_AddrToRead_o <= EventAddr_i;
             else
                wb_we_AddrToRead_o <= '0';
                wb_cyc_AddrToRead_o <= '0';
                wb_stb_AddrToRead_o <= '0';
             end if;
+         else
+            wb_we_AddrToRead_o <= '0';
+            wb_cyc_AddrToRead_o <= '0';
+            wb_stb_AddrToRead_o <= '0';
          end if;
       end if;
    end process;
@@ -183,39 +177,37 @@ begin
    -- Master Exterieur Interface
    Master_Interface_process : process(wb_clk_i)
    begin
-      if rising_edge(wb_clk_i) then
-         if wb_rst_i = '1' then
-            wb_we_Master_o <= '0';
-            wb_cyc_Master_o <= '0';
-            wb_stb_Master_o <= '0';
-            wb_dat_DataTable_o <= (wb_dat_DataTable_o'range => '0');
-         else
-            if s_ReadMaster = '1' then
-               if wb_ack_Master_i = '0' then
-                  wb_we_Master_o <= '0';
-                  wb_cyc_Master_o <= '1';
-                  wb_stb_Master_o <= '1';
-               else
-                  wb_we_Master_o <= '0';
-                  wb_cyc_Master_o <= '0';
-                  wb_stb_Master_o <= '0';
-                  wb_dat_DataTable_o <= wb_dat_Master_i;
-               end if;
-            elsif s_WriteMaster = '1' then
-               if wb_ack_Master_i = '0' then
-                  wb_we_Master_o <= '1';
-                  wb_cyc_Master_o <= '1';
-                  wb_stb_Master_o <= '1';
-               else
-                  wb_we_Master_o <= '0';
-                  wb_cyc_Master_o <= '0';
-                  wb_stb_Master_o <= '0';
-               end if;
+      if wb_rst_i = '1' then
+         wb_we_Master_o <= '0';
+         wb_cyc_Master_o <= '0';
+         wb_stb_Master_o <= '0';
+         wb_dat_DataTable_o <= (wb_dat_DataTable_o'range => '0');
+      elsif rising_edge(wb_clk_i) then
+         if s_ReadMaster = '1' then
+            if wb_ack_Master_i = '0' then
+               wb_we_Master_o <= '0';
+               wb_cyc_Master_o <= '1';
+               wb_stb_Master_o <= '1';
+            else
+               wb_we_Master_o <= '0';
+               wb_cyc_Master_o <= '0';
+               wb_stb_Master_o <= '0';
+               wb_dat_DataTable_o <= wb_dat_Master_i;
+            end if;
+         elsif s_WriteMaster = '1' then
+            if wb_ack_Master_i = '0' then
+               wb_we_Master_o <= '1';
+               wb_cyc_Master_o <= '1';
+               wb_stb_Master_o <= '1';
             else
                wb_we_Master_o <= '0';
                wb_cyc_Master_o <= '0';
                wb_stb_Master_o <= '0';
             end if;
+         else
+            wb_we_Master_o <= '0';
+            wb_cyc_Master_o <= '0';
+            wb_stb_Master_o <= '0';
          end if;
       end if;
    end process;
