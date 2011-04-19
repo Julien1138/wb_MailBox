@@ -59,7 +59,8 @@ entity MailBox_DataTablesInterface is
       
    -- Event Manager Interface
       EventAddr_i          : in std_logic_vector;
-      NewEvent_i           : in std_logic
+      NewEvent_i           : in std_logic;
+      ReadyForEvent_o      : out std_logic
       
    );
 end MailBox_DataTablesInterface;
@@ -85,7 +86,7 @@ begin
             wb_we_DatingTable_o <= '0';
             wb_cyc_DatingTable_o <= '0';
             wb_stb_DatingTable_o <= '0';
-            wb_dat_DatingTable_o <= (wb_dat_DatingTable_o'high downto 0 => '0');
+            wb_dat_DatingTable_o <= (wb_dat_DatingTable_o'range => '0');
          else
             if s_WriteDatingTable = '1' then
                if wb_ack_DatingTable_i = '0' then
@@ -116,7 +117,7 @@ begin
             wb_we_DataTable_o <= '0';
             wb_cyc_DataTable_o <= '0';
             wb_stb_DataTable_o <= '0';
-            wb_dat_Master_o <= (wb_dat_Master_o'high downto 0 => '0');
+            wb_dat_Master_o <= (wb_dat_Master_o'range => '0');
          else
             if s_ReadDataTable = '1' then
                if wb_ack_DataTable_i = '0' then
@@ -157,7 +158,7 @@ begin
             wb_we_AddrToRead_o <= '0';
             wb_cyc_AddrToRead_o <= '0';
             wb_stb_AddrToRead_o <= '0';
-            wb_dat_AddrToRead_o <= (wb_dat_AddrToRead_o'high downto 0 => '0');
+            wb_dat_AddrToRead_o <= (wb_dat_AddrToRead_o'range => '0');
          else
             if s_WriteAddrToRead = '1' then
                if wb_ack_AddrToRead_i = '0' then
@@ -187,7 +188,7 @@ begin
             wb_we_Master_o <= '0';
             wb_cyc_Master_o <= '0';
             wb_stb_Master_o <= '0';
-            wb_dat_DataTable_o <= (wb_dat_DataTable_o'high downto 0 => '0');
+            wb_dat_DataTable_o <= (wb_dat_DataTable_o'range => '0');
          else
             if s_ReadMaster = '1' then
                if wb_ack_Master_i = '0' then
@@ -272,5 +273,6 @@ begin
          
       end if;
    end process;
+   ReadyForEvent_o <= not (NewEvent_i or s_WriteDatingTable or s_WriteAddrToRead or s_ReadDataTable or s_WriteDataTable or s_ReadMaster or s_WriteMaster);
 
 end MailBox_DataTablesInterface_behavior;

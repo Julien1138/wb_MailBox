@@ -131,6 +131,148 @@ package MailBox_Pack is
       );
    end component;
    
+   component MailBox_DataTablesInterface
+      port
+      (
+         wb_clk_i             : in std_logic;
+         wb_rst_i             : in std_logic;
+         
+      -- Interface DatingTable
+         wb_we_DatingTable_o  : out std_logic;
+         wb_adr_DatingTable_o : out std_logic_vector;
+         wb_dat_DatingTable_o : out std_logic_vector;
+         wb_cyc_DatingTable_o : out std_logic;
+         wb_stb_DatingTable_o : out std_logic;
+         wb_ack_DatingTable_i : in std_logic;
+         
+      -- Interface DataTable
+         wb_we_DataTable_o    : out std_logic;
+         wb_adr_DataTable_o   : out std_logic_vector;
+         wb_dat_DataTable_o   : out std_logic_vector;
+         wb_dat_DataTable_i   : in std_logic_vector;
+         wb_cyc_DataTable_o   : out std_logic;
+         wb_stb_DataTable_o   : out std_logic;
+         wb_ack_DataTable_i   : in std_logic;
+         
+      -- Interface AddrToRead
+         wb_we_AddrToRead_o   : out std_logic;
+         wb_dat_AddrToRead_o  : out std_logic_vector;
+         wb_cyc_AddrToRead_o  : out std_logic;
+         wb_stb_AddrToRead_o  : out std_logic;
+         wb_ack_AddrToRead_i  : in std_logic;
+         
+      -- Interface Master Exterieur
+         wb_we_Master_o       : out std_logic;
+         wb_adr_Master_o      : out std_logic_vector;
+         wb_dat_Master_o      : out std_logic_vector;
+         wb_dat_Master_i      : in std_logic_vector;
+         wb_cyc_Master_o      : out std_logic;
+         wb_stb_Master_o      : out std_logic;
+         wb_ack_Master_i      : in std_logic;
+         
+      -- RTC interface
+         RTCTime_i            : in std_logic_vector;
+         
+      -- Event Manager Interface
+         EventAddr_i          : in std_logic_vector;
+         NewEvent_i           : in std_logic;
+         ReadyForEvent_o      : out std_logic
+         
+      );
+   end component;
+   
+   component MailBox_EventsManager
+      port
+      (
+      -- global signals
+         clk_i             : in std_logic;
+         rst_i             : in std_logic;
+         
+      -- Time Triggered Events Interface
+         NewTimeEvent_i    : in std_logic;
+         TimeEventAddr_i   : in std_logic_vector;
+         
+      -- Ext Triggered Events Interface
+         NewExtEvent_i     : in std_logic;
+         ExtEventAddr_i    : in std_logic_vector;
+         
+      -- Data Tables Interface
+         NewEvent_o        : out std_logic;
+         EventAddr_o       : out std_logic_vector;
+         ReadyForEvent_i   : in std_logic
+      );
+   end component;
+   
+   component MailBox_ScheduleTablesInterface
+      port
+      (
+         wb_clk_i                : in std_logic;
+         wb_rst_i                : in std_logic;
+         
+      -- Timetable Interface
+         wb_we_Timetable_o       : out std_logic;
+         wb_adr_Timetable_o      : out std_logic_vector;
+         wb_dat_Timetable_o      : out std_logic_vector;
+         wb_dat_Timetable_i      : in std_logic_vector;
+         wb_cyc_Timetable_o      : out std_logic;
+         wb_stb_Timetable_o      : out std_logic;
+         wb_ack_Timetable_i      : in std_logic;
+         wb_vld_Timetable_o      : out std_logic;
+         wb_vld_Timetable_i      : in std_logic;
+         
+      -- Recurrence Table Interface
+         wb_adr_Recurrence_o     : out std_logic_vector;
+         wb_dat_Recurrence_i     : in std_logic_vector;
+         wb_cyc_Recurrence_o     : out std_logic;
+         wb_stb_Recurrence_o     : out std_logic;
+         wb_ack_Recurrence_i     : in std_logic;
+         wb_vld_Recurrence_i     : in std_logic;
+         
+      -- Event Manager Interface
+         ScanEnable_i            : in std_logic;
+         WriteTimetable_i        : in std_logic;
+         ScanCounter_i           : in std_logic_vector;
+         Schedule_o              : out std_logic_vector;
+         Recurrence_o            : out std_logic_vector;
+         ScheduleNext_i          : in std_logic_vector;
+         TimetableDataIsValid_i  : in std_logic;
+         TimetableDataIsValid_o  : out std_logic;
+         RecurrenceDataIsValid_o : out std_logic;
+         TimetableEOO_o          : out std_logic;  -- End of Bus Operations
+         RecurrenceEOO_o         : out std_logic   -- End of Bus Operations
+         
+      );
+   end component;
+   
+   component MailBox_TimeTriggeredEvents
+      port
+      (
+      -- global signals
+         clk_i                   : in std_logic;
+         rst_i                   : in std_logic;
+         
+      -- RTC interface
+         RTCTime_i               : in std_logic_vector;
+      
+      -- Schedule Tables Interface
+         ScanEnable_o            : out std_logic;
+         WriteTimetable_o        : out std_logic;
+         ScanCounter_o           : out std_logic_vector;
+         Schedule_i              : in std_logic_vector;
+         Recurrence_i            : in std_logic_vector;
+         ScheduleNext_o          : out std_logic_vector;
+         TimetableDataIsValid_o  : out std_logic;
+         TimetableDataIsValid_i  : in std_logic;
+         RecurrenceDataIsValid_i : in std_logic;
+         TimetableEOO_i          : in std_logic;  -- End of Bus Operations
+         RecurrenceEOO_i         : in std_logic;  -- End of Bus Operations
+         
+      -- Event Manager Interface
+         NewEvent_o              : out std_logic;
+         EventAddr_o             : out std_logic_vector
+      );
+   end component;
+   
    component MailBox_Recurrence
       port
       (

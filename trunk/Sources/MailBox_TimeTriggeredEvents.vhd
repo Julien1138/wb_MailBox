@@ -39,8 +39,8 @@ entity MailBox_TimeTriggeredEvents is
       RecurrenceEOO_i         : in std_logic;  -- End of Bus Operations
       
    -- Event Manager Interface
-      EventAddr_o             : out std_logic_vector;
-      NewEvent_o              : out std_logic
+      NewEvent_o              : out std_logic;
+      EventAddr_o             : out std_logic_vector
    );
 end MailBox_TimeTriggeredEvents;
 
