@@ -53,10 +53,18 @@ architecture MailBox_EventsManager_behavior of MailBox_EventsManager is
    signal s_TimeEventFIFOEmpty   : std_logic;
    
    signal s_ExtEventFIFORead     : std_logic;
-   signal s_ExtEventFIFOAddr     : std_logic_vector(TimeEventAddr_i'range);
+   signal s_ExtEventFIFOAddr     : std_logic_vector(ExtEventAddr_i'range);
    signal s_ExtEventFIFOEmpty    : std_logic;
    
 begin
+   
+   --
+   -- assert
+   --
+   assert TimeEventAddr_i'length = ExtEventAddr_i'length + 1
+      and  TimeEventAddr_i'length = EventAddr_o'length
+      report "Size of address buses does not match"
+      severity failure;
    
    --
    -- Main Process
@@ -82,7 +90,7 @@ begin
                s_TimeEventFIFORead <= '1';
             elsif s_ExtEventFIFOEmpty = '0' and (s_TimeEventFIFOEmpty = '1' or s_LastEvent = TimeEvent) then
                NewEvent_o <= '1';
-               EventAddr_o <= s_ExtEventFIFOAddr;
+               EventAddr_o <= '0' & s_ExtEventFIFOAddr;
                s_LastEvent <= ExtEvent;
                s_ExtEventFIFORead <= '1';
             end if;
