@@ -273,6 +273,22 @@ package MailBox_Pack is
       );
    end component;
    
+   component MailBox_ExtTriggeredEvents
+      port
+      (
+      -- global signals
+         clk_i       : in std_logic;
+         rst_i       : in std_logic;
+         
+      -- Ext Interface
+         Trigger_i   : in std_logic_vector;
+         
+      -- Event Manager Interface
+         NewEvent_o  : out std_logic;
+         EventAddr_o : out std_logic_vector
+      );
+   end component;
+   
    component MailBox_Recurrence
       port
       (
