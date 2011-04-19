@@ -6,7 +6,7 @@ dC:\Modeltech_xe_starter\examples
 Emailbox_eventsmanager_tb
 Z0 w1303216335
 Z1 DPx4 ieee 9 math_real 0 22 zjAF7SKfg_RPI0GT^n1N`1
-Z2 DPx11 mailbox_lib 12 mailbox_pack 0 22 a0OV<Q9_Plj?oS9oB@f9K3
+Z2 DPx11 mailbox_lib 12 mailbox_pack 0 22 jgHK@MNiJ>f7z<AgXY1AR0
 Z3 DPx4 ieee 15 std_logic_arith 0 22 GJbAT?7@hRQU9IQ702DT]2
 Z4 DPx4 ieee 18 std_logic_unsigned 0 22 hEMVMlaNCR^<OOoVNV;m90
 Z5 DPx4 ieee 11 numeric_std 0 22 =NSdli^?T5OD8;4F<blj<3
@@ -17,11 +17,11 @@ Z9 FD:/dev/wb_MailBox/Test_Bench/MailBox_EventsManager_tb.vhd
 l0
 L21
 VW0IN;81^HW6Tk?n73Lba;1
-!s100 DdT<e4@9<od<60o8RSgg=1
 Z10 OX;C;6.4b;39
 32
 Z11 o-work work -2002 -explicit -O0
 Z12 tExplicit 1
+!s100 DdT<e4@9<od<60o8RSgg=1
 Amailbox_eventsmanager_tb_behavior
 R1
 R2
@@ -33,7 +33,6 @@ Z13 DEx4 work 24 mailbox_eventsmanager_tb 0 22 W0IN;81^HW6Tk?n73Lba;1
 l44
 L24
 V>dkA`Pd@F4B[a<@ff95IQ1
-!s100 5k1k1B3eio80E>m@aWS1`1
 R10
 32
 Z14 Mx6 4 ieee 14 std_logic_1164
@@ -44,9 +43,10 @@ Z18 Mx2 11 mailbox_lib 12 mailbox_pack
 Z19 Mx1 4 ieee 9 math_real
 R11
 R12
+!s100 5k1k1B3eio80E>m@aWS1`1
 Abehavior
 R1
-R2
+DPx11 mailbox_lib 12 mailbox_pack 0 22 a0OV<Q9_Plj?oS9oB@f9K3
 R3
 R4
 R5
@@ -67,16 +67,92 @@ R11
 R12
 w1303214533
 !s100 6I9kWGGR?8MNAMHC[bMLf3
+Emailbox_exttriggeredevents
+Z20 w1303224419
+R3
+R4
+R5
+R6
+R7
+Z21 8D:/dev/wb_MailBox/Sources/MailBox_ExtTriggeredEvents.vhd
+Z22 FD:/dev/wb_MailBox/Sources/MailBox_ExtTriggeredEvents.vhd
+l0
+L18
+VJ^SNKh5]z_CkFIAjd:BV<3
+R10
+32
+R11
+R12
+!s100 I2aXPaS6D9aEH83IEIF993
+Amailbox_exttriggeredevents_behavior
+R3
+R4
+R5
+R6
+DEx4 work 26 mailbox_exttriggeredevents 0 22 J^SNKh5]z_CkFIAjd:BV<3
+l43
+L34
+VDlGZ2Hbg<cC[>z]S?E=E?0
+R10
+32
+Z23 Mx4 4 ieee 14 std_logic_1164
+Z24 Mx3 4 ieee 11 numeric_std
+Z25 Mx2 4 ieee 18 std_logic_unsigned
+Z26 Mx1 4 ieee 15 std_logic_arith
+R11
+R12
+!s100 1@Qd>ifKg2LFH?Enb<S5T0
+Emailbox_exttriggeredevents_tb
+Z27 w1303224954
+R1
+R2
+R3
+R4
+R5
+R6
+R7
+Z28 8D:/dev/wb_MailBox/Test_Bench/MailBox_ExtTriggeredEvents_tb.vhd
+Z29 FD:/dev/wb_MailBox/Test_Bench/MailBox_ExtTriggeredEvents_tb.vhd
+l0
+L21
+VZS`cg<0ENkaUPkhPRDaID2
+!s100 AZHJ[::__RhAS_=zoTM5B0
+R10
+32
+R11
+R12
+Amailbox_exttriggeredevents_tb_behavior
+R1
+R2
+R3
+R4
+R5
+R6
+DEx4 work 29 mailbox_exttriggeredevents_tb 0 22 ZS`cg<0ENkaUPkhPRDaID2
+l36
+L24
+VHZSP3LQk?T>^kNa2;==[n1
+!s100 KT2eZW?5`T4@HY02k_YdU1
+R10
+32
+R14
+R15
+R16
+R17
+R18
+R19
+R11
+R12
 Emailbox_rtc
-Z20 w1302874080
+Z30 w1302874080
 R1
 R3
 R4
 R5
 R6
 R7
-Z21 8D:/dev/wb_MailBox/Sources/MailBox_RTC.vhd
-Z22 FD:/dev/wb_MailBox/Sources/MailBox_RTC.vhd
+Z31 8D:/dev/wb_MailBox/Sources/MailBox_RTC.vhd
+Z32 FD:/dev/wb_MailBox/Sources/MailBox_RTC.vhd
 l0
 L19
 Vd>QcGHobYTLN4KCZS:DMe3
@@ -97,16 +173,16 @@ L32
 V7]^UnQ^JCzQd[YB5@@RTJ3
 R10
 32
-Z23 Mx5 4 ieee 14 std_logic_1164
-Z24 Mx4 4 ieee 11 numeric_std
-Z25 Mx3 4 ieee 18 std_logic_unsigned
-Z26 Mx2 4 ieee 15 std_logic_arith
+Z33 Mx5 4 ieee 14 std_logic_1164
+Z34 Mx4 4 ieee 11 numeric_std
+Z35 Mx3 4 ieee 18 std_logic_unsigned
+Z36 Mx2 4 ieee 15 std_logic_arith
 R19
 R11
 R12
 !s100 <SYKVAMddfg1OZoY6OMa?1
 Emailbox_rtc_tb
-Z27 w1302876376
+Z37 w1302876376
 R2
 R1
 R3
@@ -114,8 +190,8 @@ R4
 R5
 R6
 R7
-Z28 8D:/dev/wb_MailBox/Test_Bench/MailBox_RTC_tb.vhd
-Z29 FD:/dev/wb_MailBox/Test_Bench/MailBox_RTC_tb.vhd
+Z38 8D:/dev/wb_MailBox/Test_Bench/MailBox_RTC_tb.vhd
+Z39 FD:/dev/wb_MailBox/Test_Bench/MailBox_RTC_tb.vhd
 l0
 L22
 VYDOLcEaF2VkIY6B7IMfoU2
@@ -141,20 +217,20 @@ R14
 R15
 R16
 R17
-Z30 Mx2 4 ieee 9 math_real
-Z31 Mx1 11 mailbox_lib 12 mailbox_pack
+Z40 Mx2 4 ieee 9 math_real
+Z41 Mx1 11 mailbox_lib 12 mailbox_pack
 R11
 R12
 !s100 <>@;:UNzbecaG`0_gA>;m0
 Emailbox_sequencer
-R20
+R30
 R3
 R4
 R5
 R6
 R7
-Z32 8D:/dev/wb_MailBox/Sources/MailBox_Sequencer.vhd
-Z33 FD:/dev/wb_MailBox/Sources/MailBox_Sequencer.vhd
+Z42 8D:/dev/wb_MailBox/Sources/MailBox_Sequencer.vhd
+Z43 FD:/dev/wb_MailBox/Sources/MailBox_Sequencer.vhd
 l0
 L18
 VAob0=QoI_[;Bb82WZU9zY0
@@ -162,7 +238,7 @@ R10
 32
 R11
 R12
-Z34 !s100 =HAHQ<LTgXNj4UO6LY0WM3
+Z44 !s100 =HAHQ<LTgXNj4UO6LY0WM3
 Amailbox_sequencer_behavior
 R3
 R4
@@ -172,17 +248,17 @@ DEx4 work 17 mailbox_sequencer 0 22 Aob0=QoI_[;Bb82WZU9zY0
 l107
 L87
 V@J?nbNmCIKzf5oDdP>3JP3
-Z35 !s100 G=V]U^2VSK2AJ_ba3RLTb0
 R10
 32
-Z36 Mx4 4 ieee 14 std_logic_1164
-Z37 Mx3 4 ieee 11 numeric_std
-Z38 Mx2 4 ieee 18 std_logic_unsigned
-Z39 Mx1 4 ieee 15 std_logic_arith
+R23
+R24
+R25
+R26
 R11
 R12
+Z45 !s100 G=V]U^2VSK2AJ_ba3RLTb0
 Emailbox_tb
-Z40 w1302901253
+Z46 w1302901253
 R2
 R1
 R3
@@ -190,8 +266,8 @@ R4
 R5
 R6
 R7
-Z41 8D:/dev/wb_MailBox/Test_Bench/MailBox_tb.vhd
-Z42 FD:/dev/wb_MailBox/Test_Bench/MailBox_tb.vhd
+Z47 8D:/dev/wb_MailBox/Test_Bench/MailBox_tb.vhd
+Z48 FD:/dev/wb_MailBox/Test_Bench/MailBox_tb.vhd
 l0
 L22
 VH_^]`FYR1[hdSeafInlBK1
@@ -211,14 +287,14 @@ DEx4 work 10 mailbox_tb 0 22 H_^]`FYR1[hdSeafInlBK1
 l60
 L32
 V61aZE01CT1OOcH8S>K]W<0
-!s100 iKW0>9`[D0fITHOaeaR?I2
 R10
 32
 R14
 R15
 R16
 R17
-R30
-R31
+R40
+R41
 R11
 R12
+!s100 iKW0>9`[D0fITHOaeaR?I2
