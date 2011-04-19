@@ -86,8 +86,6 @@ begin
       if rst_i = '1' then
          s_ReadIdx <= (others => '0');
       elsif rising_edge(clk_i) then
-      
-         Data_o <= s_FIFO(to_integer(unsigned(s_ReadIdx)));
          
          if RE_i = '1' and s_NbrOfElements /= 0 then
             s_ReadIdx <= s_ReadIdx + 1;
@@ -95,6 +93,7 @@ begin
          
       end if;
    end process;
+   Data_o <= s_FIFO(to_integer(unsigned(s_ReadIdx)));
    
    s_NbrOfElements_process : process(rst_i, clk_i)
    begin
