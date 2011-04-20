@@ -20,45 +20,51 @@ library MailBox_Lib;
 
 package MailBox_Pack is
 
-   constant Recurrence_Addr   : std_logic_vector(1 downto 0) := "00";
-   constant Timetable_Addr    : std_logic_vector(1 downto 0) := "01";
-   constant DatingTable_Addr   : std_logic_vector(1 downto 0) := "10";
-   constant DataTable_Addr    : std_logic_vector(1 downto 0) := "11";
+   constant c_Recurrence_Addr    : std_logic_vector(1 downto 0) := "00";
+   constant c_Timetable_Addr     : std_logic_vector(1 downto 0) := "01";
+   constant c_DatingTable_Addr   : std_logic_vector(1 downto 0) := "10";
+   constant c_DataTable_Addr     : std_logic_vector(1 downto 0) := "11";
 
    component MailBox
       generic
       (
-         g_RTCClockPeriode : std_logic_vector;  -- Durée d'une période de l'horloge de datation - 1
-         WB_Addr_Width         : integer;
-         WB_Data_Width         : integer;
-         RTC_time_Width        : integer
+         g_RTCClockPeriode : std_logic_vector;   -- Durée d'une période de l'horloge de datation
+         WB_Addr_Width     : integer;
+         WB_Data_Width     : integer;
+         RTC_time_Width    : integer
       );
       port
       (
-         wb_clk_i      : in std_logic;
-         wb_rst_i      : in std_logic;
+         wb_clk_i          : in std_logic;
+         wb_rst_i          : in std_logic;
          
       -- Settings and Data Read Interface
-         wb_we_i_User   : in std_logic;
-         wb_adr_i_User  : in std_logic_vector(WB_Addr_Width + 2 downto 0);
-         wb_dat_i_User  : in std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_dat_o_User  : out std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_cyc_i_User  : in std_logic;
-         wb_stb_i_User  : in std_logic;
-         wb_ack_o_User  : out std_logic;
-         wb_dtr_o_User  : out std_logic;   -- Data is available to be read
-         wb_atr_o_User  : out std_logic_vector(WB_Addr_Width downto 0); -- Address at which Data should be read
+         wb_we_User_i      : in std_logic;
+         wb_adr_User_i     : in std_logic_vector(WB_Addr_Width + 2 downto 0);
+         wb_dat_User_i     : in std_logic_vector(WB_Data_Width - 1 downto 0);
+         wb_dat_User_o     : out std_logic_vector(WB_Data_Width - 1 downto 0);
+         wb_cyc_User_i     : in std_logic;
+         wb_stb_User_i     : in std_logic;
+         wb_ack_User_o     : out std_logic;
+      
+      -- New Data updated in the MailBox
+         DataAvailable_o   : out std_logic;   -- Data is available to be read
+         AddrToRead_o      : out std_logic_vector(WB_Addr_Width downto 0); -- Address at which Data should be read
          
       -- External Master Interface
-         wb_we_o_Master  : out std_logic;
-         wb_adr_o_Master : out std_logic_vector(WB_Addr_Width - 1 downto 0);
-         wb_dat_o_Master : out std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_dat_i_Master : in std_logic_vector(WB_Data_Width - 1 downto 0);
-         wb_cyc_o_Master : out std_logic;
-         wb_stb_o_Master : out std_logic;
-         wb_ack_i_Master : in std_logic;
+         wb_we_Master_o    : out std_logic;
+         wb_adr_Master_o   : out std_logic_vector(WB_Addr_Width - 1 downto 0);
+         wb_dat_Master_i   : in std_logic_vector(WB_Data_Width - 1 downto 0);
+         wb_dat_Master_o   : out std_logic_vector(WB_Data_Width - 1 downto 0);
+         wb_cyc_Master_o   : out std_logic;
+         wb_stb_Master_o   : out std_logic;
+         wb_ack_Master_i   : in std_logic;
       
-         RTCTime_o      : out std_logic_vector(RTC_time_Width - 1 downto 0)
+      -- External trigger interface
+         ExtTrigger_i      : in std_logic_vector(2**WB_Addr_Width - 1 downto 0);
+         
+      -- RTC value
+         RTCTime_o         : out std_logic_vector(RTC_time_Width - 1 downto 0)
       );
    end component;
 
@@ -401,7 +407,7 @@ package MailBox_Pack is
    component MailBox_FIFO
       generic
       (
-         g_FIFOSize  : std_logic_vector := X"3FF"  -- Nombre d'éléments de la FIFO - 1
+         g_FIFOSize  : std_logic_vector   -- Nombre d'éléments de la FIFO - 1
       );
       port
       (
